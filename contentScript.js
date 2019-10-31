@@ -1,4 +1,5 @@
 import acronyms from "./acronyms.json";
+let findAndReplaceDOMText = require("findAndReplaceDOMText");
 
 // REGEX To find acronyms
 let wordChars = "[\\wæøåÆØÅü<>\\*]";
@@ -17,32 +18,52 @@ const replaceRegex = new RegExp(
   "g"
 );
 console.log(replaceRegex);
-
 let messageList = document.getElementById("messageList");
 let messages = messageList ? messageList.getElementsByClassName("message") : [];
 
 for (var i = 0; i < messages.length; i++) {
-  let currentMessage = messages[i];
-  let messageContent = currentMessage.getElementsByClassName("messageText");
-  let innerHTML = messageContent[0].innerHTML;
-  currentMessage.getElementsByClassName("messageContent")[0].style.overflow =
-    "visible";
-  let scanned = scanAndReplace(innerHTML);
-  messageContent[0].innerHTML = scanned;
+  let message = messages[i];
+  let messageWrapper = message.querySelector(".messageContent");
+  messageWrapper.style.overflow = "visible";
+
+  let messageTextElement = messageWrapper.querySelector(".messageText");
+
+  makeQuoteBlockVisible(messageTextElement);
+
+  findAndReplaceDOMText(messageTextElement, {
+    find: replaceRegex,
+    filterElements: function(el) {
+      if (el.className && el.className == "attribution type") {
+        return false;
+      }
+      return true;
+    },
+    replace: function(portion, match) {
+      var acronym = portion.text;
+      let foundAcronym =
+        acronyms[acronym] ||
+        acronyms["\\" + acronym] ||
+        acronyms[acronym + "+"]; //Special characters...
+      let wrappedAcronym =
+        '<span class="acronym-tooltip tooltip-bottom-right" data-tooltip="' +
+        foundAcronym +
+        '">' +
+        acronym +
+        "</span>";
+      var wrapper = document.createElement("span");
+      wrapper.className = "acronym-helper-wrapper";
+      wrapper.innerHTML = wrappedAcronym;
+      return wrapper;
+    }
+  });
 }
 
-function scanAndReplace(innerHtml) {
-  innerHtml = innerHtml.replace(replaceRegex, function(match) {
-    let foundAcronym =
-      acronyms[match] || acronyms["\\" + match] || acronyms[match + "+"]; //Special characters...
-    let newWord =
-      '<span class="acronym-tooltip tooltip-bottom-right" data-tooltip="' +
-      foundAcronym +
-      '">' +
-      match +
-      "</span>";
-    console.log("Replacing " + match + " with " + newWord);
-    return newWord;
+function makeQuoteBlockVisible(element) {
+  var quoteBlock = element.querySelector(".bbCodeBlock");
+  if (!quoteBlock) return;
+  quoteBlock.style.overflow = "visible";
+  var allChildren = quoteBlock.querySelectorAll("*");
+  allChildren.forEach(el => {
+    el.style.overflow = "visible";
   });
-  return innerHtml;
 }
