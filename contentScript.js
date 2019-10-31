@@ -1,4 +1,5 @@
 import acronyms from "./acronyms.json";
+import { all } from "q";
 let findAndReplaceDOMText = require("findAndReplaceDOMText");
 
 // REGEX To find acronyms
@@ -28,7 +29,7 @@ for (var i = 0; i < messages.length; i++) {
 
   let messageTextElement = messageWrapper.querySelector(".messageText");
 
-  makeQuoteBlockVisible(messageTextElement);
+  makeQuoteBlockVisibleForTooltip(messageTextElement);
 
   findAndReplaceDOMText(messageTextElement, {
     find: replaceRegex,
@@ -58,12 +59,35 @@ for (var i = 0; i < messages.length; i++) {
   });
 }
 
-function makeQuoteBlockVisible(element) {
+function makeQuoteBlockVisibleForTooltip(element) {
+  console.log("Hei");
   var quoteBlock = element.querySelector(".bbCodeBlock");
   if (!quoteBlock) return;
-  quoteBlock.style.overflow = "visible";
   var allChildren = quoteBlock.querySelectorAll("*");
-  allChildren.forEach(el => {
-    el.style.overflow = "visible";
+
+  var childrenList = Array.prototype.slice.call(allChildren);
+  var isMinimized = childrenList.some(el => {
+    return el.classList.contains("quoteCut");
   });
+
+  var isExpanded = childrenList.some(el => {
+    return el.classList.contains("expanded");
+  });
+
+  if (!isMinimized || isExpanded) {
+    allChildren.forEach(el => {
+      el.style.overflow = "visible";
+    });
+    quoteBlock.style.overflow = "visible";
+  }
 }
+
+document
+  .getElementsByClassName("quoteCut")[0]
+  .addEventListener("click", function(event) {
+    var quoteParent = event.target.closest(".messageText");
+    console.log(quoteParent);
+    setTimeout(function() {
+      makeQuoteBlockVisibleForTooltip(quoteParent);
+    }, 500);
+  });

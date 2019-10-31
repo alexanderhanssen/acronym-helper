@@ -14,7 +14,7 @@
   -ms-user-select: none;
   user-select: none;
   opacity: 0;
-  transition: opacity 0.35s ease 0.25s;
+  transition: opacity 0.15s ease 0.05s;
 }
 [data-tooltip]:before {
   content: attr(data-tooltip);
