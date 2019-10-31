@@ -1,0 +1,20 @@
+{
+  "name": "acronym-helper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel manifest.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel-plugin-web-extension": "^1.5.2"
+  },
+  "dependencies": {
+    "css-tooltip": "^0.3.0",
+    "parcel": "^1.12.4",
+    "tooltip": "^1.6.1"
+  }
+}

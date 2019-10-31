@@ -1,0 +1,19 @@
+{
+  "name": "Acronym helper for InsideFlyer.no",
+  "version": "1.0",
+  "description": "Hover over acronyms on insideflyer.no to figure out what they mean!",
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["https://insideflyer.no/*"],
+      "run_at": "document_idle",
+      "css": ["css-tooltip.min.css", "acronym-helper.css"],
+      "js": ["contentScript.js"]
+    }
+  ]
+}

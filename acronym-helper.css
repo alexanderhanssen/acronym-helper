@@ -1,0 +1,8 @@
+.acronym-tooltip {
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
+}
+
+.acronym-tooltip:hover {
+  cursor: help;
+}
