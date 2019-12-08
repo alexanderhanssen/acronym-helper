@@ -1,24 +1,16 @@
 import acronyms from "./acronyms.json";
-import { all } from "q";
 let findAndReplaceDOMText = require("findAndReplaceDOMText");
 
 // REGEX To find acronyms
-let wordChars = "[\\wæøåÆØÅü<>\\*]";
+let æøå = "[\\wæøåÆØÅü<>\\*]";
 let partialRegex = // A simple \b regex but with æøå chars as valid characters as well
-  "((?:(?<!" +
-  wordChars +
-  ")(?=" +
-  wordChars +
-  ")|(?<=" +
-  wordChars +
-  ")(?!" +
-  wordChars +
-  ")))";
+  "((?:(?<!" + æøå + ")(?=" + æøå + ")|(?<=" + æøå + ")(?!" + æøå + ")))";
+
 const replaceRegex = new RegExp(
   partialRegex + "(" + Object.keys(acronyms).join("|") + ")" + partialRegex,
   "g"
 );
-console.log(replaceRegex);
+
 let messageList = document.getElementById("messageList");
 let messages = messageList ? messageList.getElementsByClassName("message") : [];
 
@@ -60,7 +52,6 @@ for (var i = 0; i < messages.length; i++) {
 }
 
 function makeQuoteBlockVisibleForTooltip(element) {
-  console.log("Hei");
   var quoteBlock = element.querySelector(".bbCodeBlock");
   if (!quoteBlock) return;
   var allChildren = quoteBlock.querySelectorAll("*");
